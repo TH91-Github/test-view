@@ -36,6 +36,8 @@
     width:100%;
     padding:10px;
     text-align:center;
+    pointer-events: none;
+
   }
   .view-text span span{ color:red; font-weight:bold;}
   .fixed-wrap{
@@ -64,11 +66,18 @@
     display:inline-block;
     padding:5px 10px;
   }
+  .make-scrollable{
+    position: absolute;
+    left: 0;
+    width: 1px;
+    height: calc(100% + 1px);
+  }
 </style>
 <body>
   <div class="wrap">
     <div class="box test1">
       <h1 class="title">테스트 화면</h1>
+      <input type="text" class="input" />
     </div>
     <div class="box test2">
       <p class="title-s"></p>
@@ -82,16 +91,18 @@
     </div>
     <div class="fixed-wrap">
       <div class="btn-wrap">
-        <input type="text" class="input" />
+        
         <button type="button" class="button">테스트 버튼</button>
       </div>
     </div>
+    <div class="make-scrollable"></div>
   </div>
   <script>
     const input = document.querySelector('.input');
     const fixedWrap = document.querySelector('.fixed-wrap');
     const windowInnerH = document.querySelector('.inner-height');
     const viewportH = document.querySelector('.viewport-height');
+    let scrollY = 0;
 
     console.log(fixedWrap)
     function handleResize(){
@@ -100,10 +111,13 @@
       const _visualViewport = window.visualViewport.height;
       const scrollHeight = window.document.scrollingElement.scrollHeight
       const scrollTop = scrollHeight - window.visualViewport.height
-
+      scrollY = window.scrollY;
+      console.log(scrollY)
+      console.log(scrollHeight)
+      console.log(scrollTop)
+      console.log(scrollHeight - scrollTop)
       fixedWrap.style.height = _visualViewport + 'px';
-      window.scrollTo(0, scrollTop)
-
+      window.scrollTo(0, scrollY)
       // fiexBtn.style.
       windowInnerH.textContent = _winInnerH
       viewportH.textContent = _visualViewport
