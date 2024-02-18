@@ -87,7 +87,8 @@
     </div>
     <div class="view-text">
       <span>window inner: <span class="inner-height">0</span></span> / 
-      <span>visualViewport H: <span class="viewport-height">0</span></span>
+      <span>visualViewport H: <span class="viewport-height">0</span></span> / 
+      <span>= H: <span class="result">0</span></span>
     </div>
     <div class="fixed-wrap">
       <div class="btn-wrap">
@@ -102,28 +103,33 @@
     const fixedWrap = document.querySelector('.fixed-wrap');
     const windowInnerH = document.querySelector('.inner-height');
     const viewportH = document.querySelector('.viewport-height');
-    let scrollY = 0;
+    let wScrollY = 0;
 
     console.log(fixedWrap)
     function handleResize(){
       console.log("Resize")
       const _winInnerH = window.innerHeight;
       const _visualViewport = window.visualViewport.height;
-      const scrollHeight = window.document.scrollingElement.scrollHeight
-      const scrollTop = scrollHeight - window.visualViewport.height
-      scrollY = window.scrollY;
-      console.log(scrollY)
-      console.log(scrollHeight)
-      console.log(scrollTop)
-      console.log(scrollHeight - scrollTop)
+      console.log(wScrollY)
       fixedWrap.style.height = _visualViewport + 'px';
-      window.scrollTo(0, scrollY)
       // fiexBtn.style.
       windowInnerH.textContent = _winInnerH
       viewportH.textContent = _visualViewport
+      
+    }
+    function handleScroll(){
+      const _winInnerH = window.innerHeight;
+      const _visualViewport = window.visualViewport.height;
+      let test = _winInnerH - _visualViewport;
+      const resultT = document.querySelector('.result');
+
+      resultT.textContent = test;
+      fixedWrap.style.top = test;
+
     }
     window.addEventListener('resize',handleResize);
     window.addEventListener('load',handleResize)
+    window.addEventListener('scroll',handleScroll);
   </script>
 </body>
 </html>
