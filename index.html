@@ -13,13 +13,12 @@
   max-width:500px;
   margin:0 auto;
   text-align:center;
-  height:100svh;
 }
 
 [class*="box"] {
   height:500px;
 }
-.box1 {height:100vh; background:#B5C0D0;}
+.box1 {height: 110svh; background:#B5C0D0;}
 .box2 {background:#CCD3CA;}
 .box3 {background:#F5E8DD;}
 .top-fixed {
@@ -50,15 +49,25 @@
   top:50%;
   left:0;
 }
-
+.bottom-fixed {
+  position:fixed; 
+  bottom:0;
+  right:0;
+  width:50%;
+  height:22px;
+  border:1px solid green;
+}
 </style>
 <body>
   <div class="wrap">
     <div class="test">
+      <p class="scroll1">기본</p>
+      <p class="scroll2">기본</p>
       <p class="num">window.scrollY : <span>0</span></p>
       <p class="num2">visual : <span>0</span></p>
       <p class="num3">컨텐츠 : <span>0</span></p>
       <p class="num4">MAX : <span>0</span></p>
+      
     </div>
 
     <div class="box1">
@@ -78,7 +87,8 @@
         <button>fixed 기준</button>
       </div>
     </div>
-    
+    <!-- 일반 fixed -->
+    <div class="bottom-fixed"></div>
   </div>
  
   <script>
@@ -88,25 +98,31 @@
 
     // const visualViewport = document.querySelector('.visual-viewport');
     // const visualViewportText = visualViewport.querySelector('.viewport-height-text');
-
-
+    const testt = document.querySelector('.num span');
+    const testt2 = document.querySelector('.num2 span');
+    const testt3 = document.querySelector('.num3 span');
+    const testt4 = document.querySelector('.num4 span');
+    const scroll1 = document.querySelector('.scroll1');
+    const scroll2 = document.querySelector('.scroll2');
     const topFixed = document.querySelector('.top-fixed');
-
+    let num = 0; 
     function handleResize(){
-      const bodyH = document.body.offsetHeight ;
-      console.log(bodyH)
-      // const _innerHeight = window.innerHeight;
-      const _visualViewportHeight = window.visualViewport.height;
+      const bodyH = document.body.offsetHeight;
+      const _innerHeight = window.innerHeight;
+      const _visualViewportHeight = parseInt(window.visualViewport.height);
 
-      const testt2 = document.querySelector('.num2 span');
-      // const testt3 = document.querySelector('.num3');
+      testt.textContent = window.scrollY;
       testt2.textContent = _visualViewportHeight;
-      // testt3.textContent = scrollTop;
+      testt3.textContent = bodyH;
+      testt4.textContent = bodyH - _visualViewportHeight;
       topFixed.style.height = _visualViewportHeight+'px';
+      visualViewport.addEventListener("scroll", stopScroll2);
     }
+
     function stopScroll(e){
       const bodyH = document.body.offsetHeight;
-      const _visualViewportHeight = window.visualViewport.height;
+      const _innerHeight = window.innerHeight;
+      const _visualViewportHeight = parseInt(window.visualViewport.height);
      
       const testt = document.querySelector('.num span');
       const testt2 = document.querySelector('.num2 span');
@@ -119,6 +135,10 @@
       testt4.textContent = bodyH - _visualViewportHeight;
       topFixed.style.height = _visualViewportHeight+'px';
 
+      console.log(e.currentTarget.scrollY)
+
+      scroll1.textContent = parseInt(e.currentTarget.scrollY);
+
       if(window.scrollY > 0){
         topFixed.style.transform = `translateY(${window.scrollY}px)`; 
       }else{
@@ -128,13 +148,19 @@
         topFixed.style.transform = `translateY(${window.scrollY}px)`; 
       }
     }
+    function stopScroll2(e){
+      scroll2.textContent = parseInt(e.target.offsetTop); // 안드로이드 기준
+      console.log(e.target.offsetTop)
+    }
+    
     window.visualViewport.addEventListener('resize',handleResize);
     // window.addEventListener('load',handleResize);
-    document.addEventListener('scroll',stopScroll)
+    window.addEventListener('scroll',stopScroll)
+   
 
     /*
       스크롤을 아래로 내렸을때 빈공간 계산 <- 
-      EX 스크롤 값 34
+      EX) 스크롤 값 34
       visual 645 
       컨텐츠 총 길이 679
 
@@ -155,7 +181,9 @@
       - 빈 값 발생한 만큼 움직이지 않는다.
       - overflow-y 를 준 영역 외 스크롤 하면 똑같은 현상이 나타남.
       - overflow-y 포기 후 가상 생기는 부분을 scroll 수정해서 해보자.
-      */
+    
+      // 새로운 방안으로 스크롤 해제
+    */
 
 
 </script>
