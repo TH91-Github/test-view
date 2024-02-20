@@ -7,129 +7,157 @@
   <link rel="stylesheet" href="./assets/css/common.css">
 </head>
 <style>
-  .wrap {
-    position:relative; 
-    width:100%; 
-    max-width:450px;
-    margin:0 auto;
-    border:1px solid #000;
-  }
-  .box{
-    width:100%;
-    height:500px;
-    text-align:center;
-  }
-  .test1 {background:rgb(13,158,216);}
-  .test2 {background:rgb(185,199,142);}
-  .test3 {background:rgb(47,60,87)}
-  .title{
-    text-align:center;
-    color:#fff;
-  }
-  .title-s{
-    font-size:14px;
-  }
-  .view-text{
-    position:fixed;
-    top:50px;
-    left:0;
-    width:100%;
-    padding:10px;
-    text-align:center;
-    pointer-events: none;
+.wrap {
+  position:relative;
+  width:100%;
+  max-width:500px;
+  margin:0 auto;
+  text-align:center;
+  height:100svh;
+}
 
-  }
-  .view-text span span{ color:red; font-weight:bold;}
-  .fixed-wrap{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100svh;
-    pointer-events: none;
-    border:1px solid red;
-  }
-  .btn-wrap{
-    display:flex;
-    position:absolute;
-    flex-wrap:wrap;
-    left:0;
-    bottom:0;
-    width:100%;
-    pointer-events: auto;
-  }
-  .input{
-    flex-grow: 1;
-    padding: 5px 10px;
-  }
-  .button{
-    display:inline-block;
-    padding:5px 10px;
-  }
-  .make-scrollable{
-    position: absolute;
-    left: 0;
-    width: 1px;
-    height: calc(100% + 1px);
-  }
+[class*="box"] {
+  height:500px;
+}
+.box1 {height:100vh; background:#B5C0D0;}
+.box2 {background:#CCD3CA;}
+.box3 {background:#F5E8DD;}
+.top-fixed {
+  position:fixed;
+  z-index:2;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  border:1px solid red;
+  pointer-events:none;
+}
+.absolute-item {
+  display:flex;
+  position:absolute;
+  bottom:0;
+  width:100%;
+  pointer-events: auto;
+}
+.make-scrollable{
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: calc(100% + 1px);
+}
+.test {
+  position:fixed;
+  top:50%;
+  left:0;
+}
+
 </style>
 <body>
   <div class="wrap">
-    <div class="box test1">
-      <h1 class="title">테스트 화면</h1>
+    <div class="test">
+      <p class="num">window.scrollY : <span>0</span></p>
+      <p class="num2">visual : <span>0</span></p>
+      <p class="num3">컨텐츠 : <span>0</span></p>
+      <p class="num4">MAX : <span>0</span></p>
+    </div>
+
+    <div class="box1">
+      <h1 class="title">aos ios 키패드 유무 확인</h1>
       <input type="text" class="input" />
     </div>
-    <div class="box test2">
-      <p class="title-s"></p>
+    <!-- <div class="box2">
+      <h2 class="title-s">box2</h2>
     </div>
-    <div class="box test3">
-      <p class="title-s"></p>
-    </div>
-    <div class="view-text">
-      <span>window inner: <span class="inner-height">0</span></span> / 
-      <span>visualViewport H: <span class="viewport-height">0</span></span> / 
-      <span>= H: <span class="result">0</span></span>
-    </div>
-    <div class="fixed-wrap">
-      <div class="btn-wrap">
-        
-        <button type="button" class="button">테스트 버튼</button>
+    <div class="box3">
+      <h2 class="title-s">box3</h2>
+    </div> -->
+     <!-- fixed 버튼 -->
+    <div class="top-fixed">
+      <div class="absolute-item">
+        <input type="text">
+        <button>fixed 기준</button>
       </div>
     </div>
-    <div class="make-scrollable"></div>
+    
   </div>
+ 
   <script>
-    const input = document.querySelector('.input');
-    const fixedWrap = document.querySelector('.fixed-wrap');
-    const windowInnerH = document.querySelector('.inner-height');
-    const viewportH = document.querySelector('.viewport-height');
-    let wScrollY = 0;
+    // const input = document.querySelector('.input');
+    // const innerHeight = document.querySelector('.inner-height')
+    // const innerHeightText = innerHeight.querySelector('.inner-height-text');
 
-    console.log(fixedWrap)
+    // const visualViewport = document.querySelector('.visual-viewport');
+    // const visualViewportText = visualViewport.querySelector('.viewport-height-text');
+
+
+    const topFixed = document.querySelector('.top-fixed');
+
     function handleResize(){
-      console.log("Resize")
-      const _winInnerH = window.innerHeight;
-      const _visualViewport = window.visualViewport.height;
-      console.log(wScrollY)
-      fixedWrap.style.height = _visualViewport + 'px';
-      // fiexBtn.style.
-      windowInnerH.textContent = _winInnerH
-      viewportH.textContent = _visualViewport
-      
+      const bodyH = document.body.offsetHeight ;
+      console.log(bodyH)
+      // const _innerHeight = window.innerHeight;
+      const _visualViewportHeight = window.visualViewport.height;
+
+      const testt2 = document.querySelector('.num2 span');
+      // const testt3 = document.querySelector('.num3');
+      testt2.textContent = _visualViewportHeight;
+      // testt3.textContent = scrollTop;
+      topFixed.style.height = _visualViewportHeight+'px';
     }
-    function handleScroll(){
-      const _winInnerH = window.innerHeight;
-      const _visualViewport = window.visualViewport.height;
-      let test = _winInnerH - _visualViewport;
-      const resultT = document.querySelector('.result');
+    function stopScroll(e){
+      const bodyH = document.body.offsetHeight;
+      const _visualViewportHeight = window.visualViewport.height;
+     
+      const testt = document.querySelector('.num span');
+      const testt2 = document.querySelector('.num2 span');
+      const testt3 = document.querySelector('.num3 span');
+      const testt4 = document.querySelector('.num4 span');
+      
+      testt.textContent = window.scrollY;
+      testt2.textContent = _visualViewportHeight;
+      testt3.textContent = bodyH;
+      testt4.textContent = bodyH - _visualViewportHeight;
+      topFixed.style.height = _visualViewportHeight+'px';
 
-      resultT.textContent = test;
-      fixedWrap.style.top = test+'px';
-
+      if(window.scrollY > 0){
+        topFixed.style.transform = `translateY(${window.scrollY}px)`; 
+      }else{
+        topFixed.style.transform = `translateY(0px)`; 
+      }
+      if((bodyH - _visualViewportHeight) < window.scrollY){
+        topFixed.style.transform = `translateY(${window.scrollY}px)`; 
+      }
     }
     window.visualViewport.addEventListener('resize',handleResize);
-    window.addEventListener('load',handleResize)
-    window.addEventListener('scroll',handleScroll);
-  </script>
+    // window.addEventListener('load',handleResize);
+    document.addEventListener('scroll',stopScroll)
+
+    /*
+      스크롤을 아래로 내렸을때 빈공간 계산 <- 
+      EX 스크롤 값 34
+      visual 645 
+      컨텐츠 총 길이 679
+
+      스크롤 값 
+
+      1.
+      오차 값 = 스크롤 값 - (visual - 컨텐츠 총 길이)
+      2. 
+      visual - 컨텐츠 총 길이 = 키패드 높이 
+      3.
+      키패드 높이보다 스크롤 값이 높으면 transform 하지 않는다
+      4. 키패드 열린 상태에서
+      스크롤 값이 MAX보다 높으면 다시 오차 값을 빼서 scroll
+
+      
+      작성 시 필요한 것
+      - document 위에 컨텐츠에 스크롤 값을 주는 것.
+      - 빈 값 발생한 만큼 움직이지 않는다.
+      - overflow-y 를 준 영역 외 스크롤 하면 똑같은 현상이 나타남.
+      - overflow-y 포기 후 가상 생기는 부분을 scroll 수정해서 해보자.
+      */
+
+
+</script>
 </body>
 </html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <title>TEST 화면</title>
+  <link rel="stylesheet" href="./assets/css/common.css">
+</head>
+<style>
+  body {overflow:hidden; height:350px; background:gray;}
+  .wrap {
+    position:relative;
+    width:100%;
+    max-width:500px;
+    margin:0 auto;
+    text-align:center;
+    height:100vh;
+    overflow-y: auto;
+  }
+  .title{
+    font-size:18px;
+  }
+  .input {
+    margin-top:10px;
+    padding:5px 10px;
+  }
+  .input:focus {
+    outline-color:red;
+  }
+  [class*="box"] {
+    height:500px;
+  }
+  .box1 {background:#B5C0D0;}
+  .box2 {background:#CCD3CA;}
+  .box3 {background:#F5E8DD;}
+  
+  .bottom-wrap {
+    display:flex;
+    justify-content: center;;
+    position:fixed;
+    z-index:2;
+    width:50%;
+    bottom:10px;
+    right:0;
+    border:1px solid green;
+  }
+  
+  .bottom-fixed {
+    display:flex;
+    justify-content: center;;
+    position:fixed;
+    z-index:2;
+    width:50%;
+    left:0;
+    bottom:10px;
+    border:1px solid red;
+  }
+  .test-group > div{
+    position:fixed;
+    width:70px;
+    box-sizing:border-box;
+    pointer-events:none;
+  }
+  .test-group > div > span {
+    display:block;
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:100%;
+    font-size:14px;
+    font-weight:bold;
+    text-shadow:0px 1px 1px rgba(255,255,255,.3);
+    transform: translate(-50%,-50%);
+    text-align:center;
+  }
+  .vh-box{
+    top:0;
+    left:0;
+    height:100vh;
+    background:rgb(255, 104, 104,.7);
+  }
+  .svh-box{
+    top:0;
+    left: 100px;
+    height: 100svh;
+    background:rgb(255, 187, 100,.7);
+  }
+  .inner-height{
+    top:0;
+    right: 100px;
+    background:rgb(220, 255, 183,.7);
+  }
+  .visual-viewport {
+    top:0;
+    right: 0px;
+    background:rgb(127, 39, 255,.7);
+  }
+  .visual-viewport.on{
+    transform:initial;
+    background:pink;
+  }
+
+  .make-scrollable {
+    position: absolute;
+    left: 0;
+    width: 1px;
+    height: calc(100% + 1px);
+  }
+
+</style>
+<body>
+  <div class="wrap">
+    <div class="make-scrollable"></div>
+
+    <div class="box1">
+      <h1 class="title">aos ios 키패드 유무 확인</h1>
+      <input type="text" class="input" />
+    </div>
+    <div class="box2">
+      <h2 class="title-s">box2</h2>
+    </div>
+    <div class="box3">
+      <h2 class="title-s">box3</h2>
+    </div>
+  </div>
+  <div class="bottom-wrap">
+    <input type="text">
+    <button>wrap 기준</button>
+  </div>
+  <!-- fixed 버튼 -->
+  <div class="bottom-fixed">
+    <input type="text">
+    <button>fixed 기준</button>
+  </div>
+  <!-- 👇 높이 비교 -->
+  <div class="test-group">
+    <div class="vh-box"><span>vh</span></div>
+    <div class="svh-box"><span>svh</span></div>
+    <div class="inner-height">
+      <span>
+        innerHeight<br />
+        <span class="inner-height-text">0</span>
+      </span>
+    </div>
+    <div class="visual-viewport">
+      <span>
+        visualViewport <br />Heught
+        <span class="viewport-height-text">0</span>
+      </span>
+    </div>
+  </div>
+  <script>
+    const input = document.querySelector('.input');
+    const innerHeight = document.querySelector('.inner-height')
+    const innerHeightText = innerHeight.querySelector('.inner-height-text');
+
+    const visualViewport = document.querySelector('.visual-viewport');
+    const visualViewportText = visualViewport.querySelector('.viewport-height-text');
+
+
+    function handleResize(){
+      const _innerHeight = window.innerHeight;
+      const _visualViewportHeight = window.visualViewport.height;
+      // // innerHeight
+      innerHeight.style.height =  _innerHeight + 'px';
+      innerHeightText.textContent = _innerHeight;
+      
+      // // visualViewport height
+      visualViewport.style.height = _visualViewportHeight + 'px';
+      visualViewport.classList.add("on");
+      visualViewportText.textContent = _visualViewportHeight;
+
+
+      const newWrap = document.querySelector('.bottom-wrap');
+      console.log(newWrap)
+      newWrap.style.position = 'absolute'
+
+      document.documentElement.style.setProperty('height',`${_visualViewportHeight}px`);
+    }
+    function scrollTest(){
+      e.preventDefault();
+    }
+
+    function handleScroll(){
+      const _winInnerH = window.innerHeight;
+      const _visualViewport = window.visualViewport.height;
+      let test = _winInnerH - _visualViewport;
+    }
+    window.visualViewport.addEventListener('resize',handleResize);
+    window.addEventListener('load',handleResize)
+    
+  </script>
+</body>
+</html>
