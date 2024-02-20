@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <title>TEST 화면</title>
+  <link rel="stylesheet" href="./assets/css/common.css">
+</head>
+<style>
+.wrap {
+  position:relative;
+  width:100%;
+  max-width:500px;
+  margin:0 auto;
+  text-align:center;
+}
+
+/* [class*="box"] {
+  height:500px;
+} */
+.box1 {height: 100svh; background:#B5C0D0;}
+.box2 {background:#CCD3CA;}
+.box3 {background:#F5E8DD;}
+.top-fixed {
+  position:fixed;
+  z-index:2;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  border:1px solid red;
+  pointer-events:none;
+}
+.absolute-item {
+  display:flex;
+  position:absolute;
+  bottom:0;
+  width:100%;
+  pointer-events: auto;
+}
+.make-scrollable{
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: calc(100% + 1px);
+}
+.test {
+  position:fixed;
+  top:50%;
+  left:0;
+}
+.bottom-fixed {
+  position:fixed; 
+  bottom:0;
+  right:0;
+  width:50%;
+  height:22px;
+  border:1px solid green;
+}
+</style>
+<body>
+  <div class="wrap">
+    <div class="test">
+      <p class="scroll1">기본</p>
+      <p class="scroll2">기본</p>
+      <p class="num">window.scrollY : <span>0</span></p>
+      <p class="num2">visual : <span>0</span></p>
+      <p class="num3">컨텐츠 : <span>0</span></p>
+      <p class="num4">MAX : <span>0</span></p>
+      
+    </div>
+
+    <div class="box1">
+      <h1 class="title">aos ios 키패드 유무 확인</h1>
+      <input type="text" class="input" />
+    </div>
+    <!-- <div class="box2">
+      <h2 class="title-s">box2</h2>
+    </div>
+    <div class="box3">
+      <h2 class="title-s">box3</h2>
+    </div> -->
+     <!-- fixed 버튼 -->
+    <div class="top-fixed">
+      <div class="absolute-item">
+        <input type="text">
+        <button>fixed 기준</button>
+      </div>
+    </div>
+    <!-- 일반 fixed -->
+    <div class="bottom-fixed"></div>
+  </div>
+ 
+  <script>
+    // const input = document.querySelector('.input');
+    // const innerHeight = document.querySelector('.inner-height')
+    // const innerHeightText = innerHeight.querySelector('.inner-height-text');
+
+    // const visualViewport = document.querySelector('.visual-viewport');
+    // const visualViewportText = visualViewport.querySelector('.viewport-height-text');
+    const testt = document.querySelector('.num span');
+    const testt2 = document.querySelector('.num2 span');
+    const testt3 = document.querySelector('.num3 span');
+    const testt4 = document.querySelector('.num4 span');
+    const scroll1 = document.querySelector('.scroll1');
+    const scroll2 = document.querySelector('.scroll2');
+    const topFixed = document.querySelector('.top-fixed');
+    let num = 0; 
+    function handleResize(){
+      const bodyH = document.body.offsetHeight;
+      const _innerHeight = window.innerHeight;
+      const _visualViewportHeight = parseInt(window.visualViewport.height);
+
+      testt.textContent = window.scrollY;
+      testt2.textContent = _visualViewportHeight;
+      testt3.textContent = bodyH;
+      testt4.textContent = bodyH - _visualViewportHeight;
+      topFixed.style.height = _visualViewportHeight+'px';
+      visualViewport.addEventListener("scroll", stopScroll2);
+    }
+
+    function stopScroll(e){
+      const bodyH = document.body.offsetHeight;
+      const _innerHeight = window.innerHeight;
+      const _visualViewportHeight = parseInt(window.visualViewport.height);
+     
+      const testt = document.querySelector('.num span');
+      const testt2 = document.querySelector('.num2 span');
+      const testt3 = document.querySelector('.num3 span');
+      const testt4 = document.querySelector('.num4 span');
+      
+      testt.textContent = window.scrollY;
+      testt2.textContent = _visualViewportHeight;
+      testt3.textContent = bodyH;
+      testt4.textContent = bodyH - _visualViewportHeight;
+      topFixed.style.height = _visualViewportHeight+'px';
+
+      console.log(e.currentTarget.scrollY)
+
+      scroll1.textContent = parseInt(e.currentTarget.scrollY);
+
+      if(window.scrollY > 0){
+        topFixed.style.transform = `translateY(${window.scrollY}px)`; 
+      }else{
+        topFixed.style.transform = `translateY(0px)`; 
+      }
+      if((bodyH - _visualViewportHeight) < window.scrollY){
+        topFixed.style.transform = `translateY(${window.scrollY}px)`; 
+      }
+    }
+    function stopScroll2(e){
+      scroll2.textContent = parseInt(e.target.offsetTop); // 안드로이드 기준
+      console.log(e.target.offsetTop)
+    }
+    
+    window.visualViewport.addEventListener('resize',handleResize);
+    // window.addEventListener('load',handleResize);
+    window.addEventListener('scroll',stopScroll)
+   
+
+    /*
+      스크롤을 아래로 내렸을때 빈공간 계산 <- 
+      EX) 스크롤 값 34
+      visual 645 
+      컨텐츠 총 길이 679
+
+      스크롤 값 
+
+      1.
+      오차 값 = 스크롤 값 - (visual - 컨텐츠 총 길이)
+      2. 
+      visual - 컨텐츠 총 길이 = 키패드 높이 
+      3.
+      키패드 높이보다 스크롤 값이 높으면 transform 하지 않는다
+      4. 키패드 열린 상태에서
+      스크롤 값이 MAX보다 높으면 다시 오차 값을 빼서 scroll
+
+      
+      작성 시 필요한 것
+      - document 위에 컨텐츠에 스크롤 값을 주는 것.
+      - 빈 값 발생한 만큼 움직이지 않는다.
+      - overflow-y 를 준 영역 외 스크롤 하면 똑같은 현상이 나타남.
+      - overflow-y 포기 후 가상 생기는 부분을 scroll 수정해서 해보자.
+    
+      // 새로운 방안으로 스크롤 해제
+    */
+
+
+</script>
+</body>
+</html>
