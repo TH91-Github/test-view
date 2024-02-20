@@ -8,12 +8,10 @@
 </head>
 <style>
 html{
-  height:100%;
   border:1px solid blue;
-  background:#000;
+  background:#fff;
 }
 body{
-  height:100%;
   border:1px solid red;
   background:gray;
 }
@@ -21,21 +19,15 @@ body{
   position:relative;
   overflow-y: auto;
   max-width:750px;
-  height:100%;
+  height:100svh;
   margin:0 auto;
   background:#FFF3CF;
 }
 #make-scrollable {
   position: absolute;
-  left: 10px;
-  width: 100px;
+  left: 0;
+  width: 1px;
   height: calc(100% + 1px); /* 100% 보다 1px 높게 하여 .wrap scroll 발생하도록 */
-}
-#make-scrollable span {
-  position:absolute;
-  left:10px;
-  top:50%;
-  color:#fff;
 }
 .content{
   position:relative;
