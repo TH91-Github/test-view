@@ -19,16 +19,29 @@ body{
 }
 .wrap {
   position:relative;
+  overflow-y: auto;
   max-width:750px;
   height:100%;
   margin:0 auto;
   background:#FFF3CF;
 }
+#make-scrollable {
+  position: absolute;
+  left: 10px;
+  width: 100px;
+  height: calc(100% + 1px); /* 100% 보다 1px 높게 하여 .wrap scroll 발생하도록 */
+}
+#make-scrollable span {
+  position:absolute;
+  left:10px;
+  top:50%;
+  color:#fff;
+}
 .content{
   position:relative;
+  height:auto;
   padding:30px;
 }
-
 .input-box {
   margin-top:30px;
   text-align:center;
@@ -39,6 +52,23 @@ body{
 .title{
   font-size:1.125rem;
   text-align:center;
+}
+[class^="box-cont"]{
+  position:relative;
+  width:100%;
+  height:500px;
+  border:1px solid #000;
+  text-align:center;
+}
+[class^="box-cont"] span {color:#fff;}
+.box-cont1 {background:#40A2E3;}
+.box-cont2 {background:#0D9276;}
+.box-cont3 {background:#637A9F;}
+.pos-bottom {
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
 }
 [class^="fixed-"]{
   position:fixed;
@@ -53,13 +83,6 @@ body{
 .fixed-center{top:50%; transform: translateY(-50%);}
 .fixed-bottom{bottom:0;}
 
-#make-scrollable {
-  position: absolute;
-  left: 0;
-  width: 1px;
-  height: calc(100% + 1px);
-}
-
 </style>
 <body>
   <div class="wrap">
@@ -70,6 +93,20 @@ body{
         <input type="text" class="input"/><br />
         <span>☝️ TEST Input</span>
       </div>
+      <div class="box-cont1">
+        <span>box-1 top</span>
+        <span class="pos-bottom">box-1 bottom</span>
+      </div>
+      <div class="box-cont2">
+        <span>box-2 top</span>
+        <span class="pos-bottom">box-2 bottom</span>
+      </div>
+      <div class="box-cont3">
+        <span>box-3 top</span>
+        <span class="pos-bottom">box-3 bottom</span>
+      </div>
+
+
       <div class="fixed-top">fixed : Top</div>
       <div class="fixed-center">fixed : Center</div>
       <div class="fixed-bottom">fixed : Bottom</div>
