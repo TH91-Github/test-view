@@ -17,17 +17,9 @@ body{
 }
 .wrap {
   position:relative;
-  overflow-y: auto;
-  height:100svh;
   max-width:750px;
   margin:0 auto;
   background:#FFF3CF;
-}
-#make-scrollable {
-  position: absolute;
-  left: 0;
-  width: 1px;
-  height: calc(100% + 1px); /* 100% 보다 1px 높게 하여 .wrap scroll 발생하도록 */
 }
 .content{
   position:relative;
@@ -75,10 +67,20 @@ body{
 .fixed-center{top:50%; transform: translateY(-50%);}
 .fixed-bottom{bottom:0;}
 
+.test-wrap {
+  position:fixed;
+  top:0;
+  left:0;
+  width:40%;
+  height:100%;
+  background: rgb(0, 0, 0,.7);
+  color:#FFBB64;
+}
+.test-wrap span {color:#fff;}
+.test-center {position:absolute; top:50%; left:10px; padding:5px; border:1px solid red; transform:translateY(-50%); }
 </style>
 <body>
   <div class="wrap">
-    <div id="make-scrollable"></div>
     <div class="content">
       <h1 class="title">Android, IOS 키보드 테스트</h1>
       <div class="input-box">
@@ -97,13 +99,63 @@ body{
         <span>box-3 top</span>
         <span class="pos-bottom">box-3 bottom</span>
       </div>
-
-
       <div class="fixed-top">fixed : Top</div>
       <div class="fixed-center">fixed : Center</div>
       <div class="fixed-bottom">fixed : Bottom</div>
     </div>
-    
+    <div class="test-wrap">
+      <div class="test-center">
+        <p class="window-scroll">w-scroll: <span>0</span></p>
+        <p class="visualviewport-scroll">viewport-scroll: <span>0</span></p>
+        <hr />
+        <p class="body-height">body-H: <span>0</span></p>
+        <p class="window-innerHeight">window-H: <span>0</span></p>
+        <p class="visualviewport-height">viewport-H: <span>0</span></p>
+      </div>
+    </div>
   </div>
 </body>
 </html>
+
+<script>
+
+const windowScroll = document.querySelector('.window-scroll span');
+const viewportScroll = document.querySelector('.visualviewport-scroll span');
+
+const bodyHeightText = document.querySelector('.body-height span');
+const windowHeightText = document.querySelector('.window-innerHeight span');
+const viewportHeightText = document.querySelector('.visualviewport-height span');
+
+// Scroll
+function handleWindowScroll(){
+  windowScroll.textContent = window.scrollY;
+}
+function handleViewportScroll(e){
+  viewportScroll.textContent = e.target.offsetTop;
+}
+// Resize
+function viewportResize () {
+  const bodyHeight = document.body.offsetHeight;
+  const windowInnerHeight = window.innerHeight;
+  const viewportHeight = visualViewport.height;
+  // body-H
+  bodyHeightText.textContent = bodyHeight;
+  // window-H
+  windowHeightText.textContent = windowInnerHeight;
+  // viewport-H
+  viewportHeightText.textContent = viewportHeight;
+
+  window.addEventListener('scroll',handleWindowScroll);
+  visualViewport.addEventListener("scroll", handleViewportScroll);
+}
+visualViewport.addEventListener('resize',viewportResize);
+
+
+
+
+      
+
+// test
+window.addEventListener('load',viewportResize);
+
+</script>
