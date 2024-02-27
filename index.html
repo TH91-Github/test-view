@@ -27,6 +27,8 @@ body{
   padding:30px;
 }
 .input-box {
+  position:relative;
+  z-index:11;
   margin-top:30px;
   text-align:center;
 }
@@ -71,13 +73,45 @@ body{
   position:fixed;
   top:0;
   left:0;
-  width:40%;
+  width:7.5rem;
   height:100%;
   background: rgb(0, 0, 0,.7);
+  font-size:0.875rem;
   color:#FFBB64;
 }
-.test-wrap span {color:#fff;}
-.test-center {position:absolute; top:50%; left:10px; padding:5px; border:1px solid red; transform:translateY(-50%); }
+.test-wrap span {font-size:0.75rem; color:#fff;}
+.test-center {position:absolute; top:50%; left:50%; width:100%; padding:5px 3px; border:1px solid red; transform:translate(-50%, -50%); }
+.test-viewport{
+  position:fixed;
+  top:0;
+  left:calc(7.5rem + 10px);
+  width:7.5rem;
+  height:100%;
+  background:rgb(67, 104, 80,.7);
+  font-size:0.875rem;
+}
+.test-viewport .title {
+  position:absolute;
+  top:200px;
+  width:100%;
+  color:#fff;
+}
+.test-viewport > span {
+  display:inline-block;
+  position:absolute;
+  left:50%;
+  padding: 3px 5px;
+  border-radius:5px;
+  background:#12372A;
+  font-size:0.75rem;
+  color:#fff;
+  text-align:center;
+  transform:translateX(-50%);
+}
+.test-viewport .top {top:0;}
+.test-viewport .center {top:50%; transform:translate(-50%,-50%);}
+.test-viewport .bottom {bottom:0;}
+
 </style>
 <body>
   <div class="wrap">
@@ -99,19 +133,31 @@ body{
         <span>box-3 top</span>
         <span class="pos-bottom">box-3 bottom</span>
       </div>
+      <!-- fixed 비교 top, center, bottom -->
       <div class="fixed-top">fixed : Top</div>
       <div class="fixed-center">fixed : Center</div>
       <div class="fixed-bottom">fixed : Bottom</div>
     </div>
+    <!-- 고정 fixed 수치 표 -->
     <div class="test-wrap">
       <div class="test-center">
-        <p class="window-scroll">w-scroll: <span>0</span></p>
-        <p class="visualviewport-scroll">viewport-scroll: <span>0</span></p>
+        <p class="window-scroll">w-scroll: <br /><span>0</span></p>
+        <p class="visualviewport-scroll">viewport-scroll: <br /><span>0</span></p>
         <hr />
         <p class="body-height">body-H: <span>0</span></p>
         <p class="window-innerHeight">window-H: <span>0</span></p>
         <p class="visualviewport-height">viewport-H: <span>0</span></p>
       </div>
+    </div>
+    <!-- viewport 키보드 유무에 따라 변경 -->
+    <div class="test-viewport">
+      <p class="title">
+        viewport <br />Box<br />
+        키보드 <span class="viewportText">Off</span>
+      </p>
+      <span class="top">viewport Top</span>
+      <span class="center">viewport Center</span>
+      <span class="bottom">viewport Bottom</span>
     </div>
   </div>
 </body>
@@ -122,22 +168,27 @@ body{
 const windowScroll = document.querySelector('.window-scroll span');
 const viewportScroll = document.querySelector('.visualviewport-scroll span');
 
+const keyboardText = document.querySelector('.viewportText');
 const bodyHeightText = document.querySelector('.body-height span');
 const windowHeightText = document.querySelector('.window-innerHeight span');
 const viewportHeightText = document.querySelector('.visualviewport-height span');
+const viewportWrpa = document.querySelector('.test-viewport');
+let isKeyboard = false;
 
+let prevVisualViewport = 0;
 // Scroll
 function handleWindowScroll(){
-  windowScroll.textContent = window.scrollY;
+  windowScroll.textContent = parseInt(window.scrollY);
+  console.log(window.scrollY)
 }
 function handleViewportScroll(e){
-  viewportScroll.textContent = e.target.offsetTop;
+  viewportScroll.textContent = parseInt(e.target.offsetTop);
 }
 // Resize
 function viewportResize () {
   const bodyHeight = document.body.offsetHeight;
   const windowInnerHeight = window.innerHeight;
-  const viewportHeight = visualViewport.height;
+  const viewportHeight = parseInt(visualViewport.height);
   // body-H
   bodyHeightText.textContent = bodyHeight;
   // window-H
@@ -145,15 +196,31 @@ function viewportResize () {
   // viewport-H
   viewportHeightText.textContent = viewportHeight;
 
-  window.addEventListener('scroll',handleWindowScroll);
-  visualViewport.addEventListener("scroll", handleViewportScroll);
+  // IOS 키패드 전체 화면 높이보다 viewport 높이가 작을 때
+  if(windowInnerHeight > viewportHeight){
+    keyboardText.textContent = 'On';
+    isKeyboard = true;
+    viewportWrpa.style.height = `${viewportHeight}px`;
+  }else{
+    keyboardText.textContent = 'Off';
+    isKeyboard = false;
+    viewportWrpa.style.height = "100%";
+  }
+
+  // window.innerHeight > visualViewport 높이 = 키보드 열었을 시
+  // if(windowInnerHeight - viewportHeight > 30){
+  //   window.addEventListener('scroll',handleWindowScroll);
+  //   visualViewport.addEventListener("scroll", handleViewportScroll);
+  // }else{
+  //   window.removeEventListener('scroll',handleWindowScroll);
+  //   visualViewport.removeEventListener("scroll", handleViewportScroll);
+  // }
+  prevVisualViewport = viewportHeight;
 }
 visualViewport.addEventListener('resize',viewportResize);
 
-
-
-
-      
+window.addEventListener('scroll',handleWindowScroll);
+visualViewport.addEventListener("scroll", handleViewportScroll);
 
 // test
 window.addEventListener('load',viewportResize);
