@@ -65,11 +65,18 @@ body{
   font-size:0.75rem;
   color:#fff;
 }
-.fixed-top {top:0;}
-.fixed-center{top:50%; transform: translateY(-50%);}
-.fixed-bottom{bottom:0;}
-
-.test-wrap {
+.fixed-top {
+  top:0;
+}
+.fixed-center{
+  top:50%; 
+  transform: translateY(-50%);
+}
+.fixed-bottom{
+  bottom:0;
+}
+/* figure-wrap */
+.figure-wrap {
   position:fixed;
   top:0;
   left:0;
@@ -79,9 +86,24 @@ body{
   font-size:0.875rem;
   color:#FFBB64;
 }
-.test-wrap span {font-size:0.75rem; color:#fff;}
-.test-center {position:absolute; top:50%; left:50%; width:100%; padding:5px 3px; border:1px solid red; transform:translate(-50%, -50%); }
-.test-viewport{
+.figure-wrap .title {
+  margin-bottom:10px; 
+  font-size:1rem; 
+  color:#fff;}
+.figure-wrap span {
+  font-size:0.75rem; 
+  color:#fff;}
+.figure-center {
+  position:absolute; 
+  top:50%; 
+  left:50%; 
+  width:100%; 
+  padding:5px 3px; 
+  border:1px solid red; 
+  transform:translate(-50%, -50%); 
+}
+/* visual-viewport */
+.visual-viewport{ 
   position:fixed;
   top:0;
   left:calc(7.5rem + 10px);
@@ -90,13 +112,13 @@ body{
   background:rgb(67, 104, 80,.7);
   font-size:0.875rem;
 }
-.test-viewport .title {
+.visual-viewport .title {
   position:absolute;
   top:200px;
   width:100%;
   color:#fff;
 }
-.test-viewport > span {
+.visual-viewport > span {
   display:inline-block;
   position:absolute;
   left:50%;
@@ -108,15 +130,22 @@ body{
   text-align:center;
   transform:translateX(-50%);
 }
-.test-viewport .top {top:0;}
-.test-viewport .center {top:50%; transform:translate(-50%,-50%);}
-.test-viewport .bottom {bottom:0;}
+.visual-viewport .top {
+  top:0;
+}
+.visual-viewport .center {
+  top:50%; 
+  transform:translate(-50%,-50%);
+}
+.visual-viewport .bottom {
+  bottom:0;
+}
 
 </style>
 <body>
   <div class="wrap">
     <div class="content">
-      <h1 class="title">Android, IOS 키보드 테스트</h1>
+      <h1 class="title">IOS 키보드 테스트</h1>
       <div class="input-box">
         <input type="text" class="input"/><br />
         <span>☝️ TEST Input</span>
@@ -133,24 +162,26 @@ body{
         <span>box-3 top</span>
         <span class="pos-bottom">box-3 bottom</span>
       </div>
-      <!-- fixed 비교 top, center, bottom -->
-      <div class="fixed-top">fixed : Top</div>
-      <div class="fixed-center">fixed : Center</div>
-      <div class="fixed-bottom">fixed : Bottom</div>
     </div>
-    <!-- 고정 fixed 수치 표 -->
-    <div class="test-wrap">
-      <div class="test-center">
+    <!-- 고정 fixed 수치 표 👉 화면 왼쪽 -->
+    <div class="figure-wrap">
+      <div class="figure-center">
+        <p class="title">position:fixed</p>
         <p class="window-scroll">w-scroll: <br /><span>0</span></p>
         <p class="visualviewport-scroll">viewport-scroll: <br /><span>0</span></p>
+        <p class="viewOffsetTop">offsetTop: <span>0</span></p>
+        <p class="viewPageTop">pageTop: <span>0</span></p>
+        <p class="result">result <span>0</span></p>
+        <p class="end-translate">translateY <span>0</span></p>
         <hr />
         <p class="body-height">body-H: <span>0</span></p>
-        <p class="window-innerHeight">window-H: <span>0</span></p>
+        <p class="window-innerheight">window-H: <span>0</span></p>
         <p class="visualviewport-height">viewport-H: <span>0</span></p>
+        <p class="difference-height">차이: <span>0</span></p>
       </div>
     </div>
-    <!-- viewport 키보드 유무에 따라 변경 -->
-    <div class="test-viewport">
+    <!-- viewport 키보드 유무에 따라 변경 👉 화면 가운데 -->
+    <div class="visual-viewport">
       <p class="title">
         viewport <br />Box<br />
         키보드 <span class="viewportText">Off</span>
@@ -159,70 +190,102 @@ body{
       <span class="center">viewport Center</span>
       <span class="bottom">viewport Bottom</span>
     </div>
+    <!-- fixed 비교 top, center, bottom 👉 화면 오른쪽 -->
+    <div class="label-fixed">
+      <div class="fixed-top">fixed : Top</div>
+      <div class="fixed-center">fixed : Center</div>
+      <div class="fixed-bottom">fixed : Bottom</div>
+    </div>
   </div>
 </body>
 </html>
 
 <script>
+// figure text 
 
-const windowScroll = document.querySelector('.window-scroll span');
-const viewportScroll = document.querySelector('.visualviewport-scroll span');
-
-const keyboardText = document.querySelector('.viewportText');
-const bodyHeightText = document.querySelector('.body-height span');
-const windowHeightText = document.querySelector('.window-innerHeight span');
-const viewportHeightText = document.querySelector('.visualviewport-height span');
-const viewportWrpa = document.querySelector('.test-viewport');
-let isKeyboard = false;
-
-let prevVisualViewport = 0;
-// Scroll
-function handleWindowScroll(){
-  windowScroll.textContent = parseInt(window.scrollY);
-  console.log(window.scrollY)
+const wrap = document.querySelector('.wrap');
+const testTag = {
+  windowScrollText : wrap.querySelector('.window-scroll span'),
+  viewportScrollText: wrap.querySelector('.visualviewport-scroll span'),
+  offsetTopText : wrap.querySelector('.viewOffsetTop span'),
+  pageTopText : wrap.querySelector('.viewPageTop span'),
+  resultText :wrap.querySelector('.result span'),
+  endTranslateText : wrap.querySelector('.end-translate span'),
+  bodyHeightText : wrap.querySelector('.body-height span'),
+  windowHeightText : wrap.querySelector('.window-innerheight span'),
+  viewportHeightText : wrap.querySelector('.visualviewport-height span'),
+  differenceHeightText : wrap.querySelector('.difference-height span'),
+  keyboardOnOffText : wrap.querySelector('.viewportText'),
 }
-function handleViewportScroll(e){
-  viewportScroll.textContent = parseInt(e.target.offsetTop);
+const figure = {
+  bodyHeight : 0,
+  windowInnerHeight : 0,
+  viewportHeight : 0,
+  differenceHeightNum : 0,
+  result : 0,
+  translateY : 0,
+  isKeyboard : false
 }
+// viewport box
+const viewportwrap = document.querySelector('.visual-viewport');
+
+
+function handleWindowScroll(e){
+  figure.result = parseInt(visualViewport.pageTop - visualViewport.offsetTop);
+  
+  viewportFixed();
+}
+// viewport scroll 스크롤 끝난 후 진행
+function handleViewportScroll (e){ 
+  const viewportScrollY = parseInt(e.target.offsetTop);
+  testTag.viewportScrollText.textContent = viewportScrollY;
+  viewportFixed();
+}
+function viewportFixed(){
+  testTag.offsetTopText.textContent = parseInt(visualViewport.offsetTop);
+  testTag.pageTopText.textContent = parseInt(visualViewport.pageTop);
+  testTag.resultText.textContent = Math.abs(figure.result)
+  if(window.scrollY > 0){ // 1 보다 작을 때 0, -1 ~
+    figure.translateY = 0;
+  }
+  // 가상 영역까지 스크롤 내려가는 것을 방지
+  if(window.scrollY + figure.viewportHeight > figure.bodyHeight - 2){ 
+    window.scrollTo(0, figure.bodyHeight - figure.viewportHeight-1);
+  }
+  figure.translateY = window.scrollY - figure.result;
+  testTag.windowScrollText.textContent = parseInt(window.scrollY); // 스크롤
+  testTag.endTranslateText.textContent = figure.translateY; 
+  viewportwrap.style.transform = `translateY(${figure.translateY}px)`;
+}
+
 // Resize
 function viewportResize () {
-  const bodyHeight = document.body.offsetHeight;
-  const windowInnerHeight = window.innerHeight;
-  const viewportHeight = parseInt(visualViewport.height);
-  // body-H
-  bodyHeightText.textContent = bodyHeight;
-  // window-H
-  windowHeightText.textContent = windowInnerHeight;
-  // viewport-H
-  viewportHeightText.textContent = viewportHeight;
+  figure.bodyHeight = document.body.offsetHeight; // body height 
+  figure.windowInnerHeight = window.innerHeight; // window height
+  figure.viewportHeight = parseInt(visualViewport.height); // viewport height
+  figure.differenceHeightNum = figure.windowInnerHeight - figure.viewportHeight; // 가려진 키보드 영역
 
+  // figure 입력
+  testTag.bodyHeightText.textContent = figure.bodyHeight;
+  testTag.windowHeightText.textContent = figure.windowInnerHeight;
+  testTag.viewportHeightText.textContent = figure.viewportHeight;
+  testTag.differenceHeightText.textContent = figure.differenceHeightNum;
+ 
   // IOS 키패드 전체 화면 높이보다 viewport 높이가 작을 때
-  if(windowInnerHeight > viewportHeight){
-    keyboardText.textContent = 'On';
-    isKeyboard = true;
-    viewportWrpa.style.height = `${viewportHeight}px`;
-  }else{
-    keyboardText.textContent = 'Off';
-    isKeyboard = false;
-    viewportWrpa.style.height = "100%";
+  if(figure.windowInnerHeight > figure.viewportHeight){ // 키보드 ON
+    figure.isKeyboard = true;
+    testTag.keyboardOnOffText.textContent = 'On';
+    viewportwrap.style.height = `${figure.viewportHeight}px`;
+  }else{  // 키보드 OFF
+    figure.isKeyboard = false;
+    testTag.keyboardOnOffText.textContent = 'Off';
+    viewportwrap.style.height = "100%";
   }
-
-  // window.innerHeight > visualViewport 높이 = 키보드 열었을 시
-  // if(windowInnerHeight - viewportHeight > 30){
-  //   window.addEventListener('scroll',handleWindowScroll);
-  //   visualViewport.addEventListener("scroll", handleViewportScroll);
-  // }else{
-  //   window.removeEventListener('scroll',handleWindowScroll);
-  //   visualViewport.removeEventListener("scroll", handleViewportScroll);
-  // }
-  prevVisualViewport = viewportHeight;
 }
 visualViewport.addEventListener('resize',viewportResize);
 
 window.addEventListener('scroll',handleWindowScroll);
 visualViewport.addEventListener("scroll", handleViewportScroll);
 
-// test
-window.addEventListener('load',viewportResize);
 
 </script>
