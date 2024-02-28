@@ -249,9 +249,10 @@ function viewportFixed(){
     figure.translateY = 0;
   }
   // 가상 영역까지 스크롤 내려가는 것을 방지
-  if(window.scrollY + figure.viewportHeight > figure.bodyHeight - 2){ 
-    window.scrollTo(0, figure.bodyHeight - figure.viewportHeight-1);
-  }
+  // if(window.scrollY + figure.viewportHeight > figure.bodyHeight - 2){ 
+  //   window.scrollTo(0, figure.bodyHeight - figure.viewportHeight-1);
+  // }
+  
   figure.translateY = parseInt(window.scrollY - figure.gapTop);
   testTag.windowScrollText.textContent = parseInt(window.scrollY); // 스크롤
   testTag.endTranslateText.textContent = figure.translateY; 
