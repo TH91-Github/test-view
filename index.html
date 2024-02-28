@@ -111,6 +111,7 @@ body{
   height:100%;
   background:rgb(67, 104, 80,.7);
   font-size:0.875rem;
+  /* transition: all .1s; */
 }
 .visual-viewport .title {
   position:absolute;
@@ -171,13 +172,13 @@ body{
         <p class="visualviewport-scroll">viewport-scroll: <br /><span>0</span></p>
         <p class="viewOffsetTop">offsetTop: <span>0</span></p>
         <p class="viewPageTop">pageTop: <span>0</span></p>
-        <p class="result">result <span>0</span></p>
+        <p class="gapTop">gapTop <span>0</span></p>
         <p class="end-translate">translateY <span>0</span></p>
         <hr />
         <p class="body-height">body-H: <span>0</span></p>
         <p class="window-innerheight">window-H: <span>0</span></p>
         <p class="visualviewport-height">viewport-H: <span>0</span></p>
-        <p class="difference-height">차이: <span>0</span></p>
+        <p class="difference-height">가려진 키보드 H: <span>0</span></p>
       </div>
     </div>
     <!-- viewport 키보드 유무에 따라 변경 👉 화면 가운데 -->
@@ -192,24 +193,23 @@ body{
     </div>
     <!-- fixed 비교 top, center, bottom 👉 화면 오른쪽 -->
     <div class="label-fixed">
-      <div class="fixed-top">fixed : Top</div>
-      <div class="fixed-center">fixed : Center</div>
-      <div class="fixed-bottom">fixed : Bottom</div>
+      <span class="fixed-top">fixed : Top</span>
+      <span class="fixed-center">fixed : Center</span>
+      <span class="fixed-bottom">fixed : Bottom</span>
     </div>
   </div>
 </body>
 </html>
 
 <script>
-// figure text 
-
 const wrap = document.querySelector('.wrap');
+// figure text 
 const testTag = {
   windowScrollText : wrap.querySelector('.window-scroll span'),
   viewportScrollText: wrap.querySelector('.visualviewport-scroll span'),
   offsetTopText : wrap.querySelector('.viewOffsetTop span'),
   pageTopText : wrap.querySelector('.viewPageTop span'),
-  resultText :wrap.querySelector('.result span'),
+  gapTopText :wrap.querySelector('.gapTop span'),
   endTranslateText : wrap.querySelector('.end-translate span'),
   bodyHeightText : wrap.querySelector('.body-height span'),
   windowHeightText : wrap.querySelector('.window-innerheight span'),
@@ -222,17 +222,15 @@ const figure = {
   windowInnerHeight : 0,
   viewportHeight : 0,
   differenceHeightNum : 0,
-  result : 0,
+  gapTop : 0,
   translateY : 0,
   isKeyboard : false
 }
 // viewport box
 const viewportwrap = document.querySelector('.visual-viewport');
 
-
 function handleWindowScroll(e){
-  figure.result = parseInt(visualViewport.pageTop - visualViewport.offsetTop);
-  
+  figure.gapTop = parseInt(visualViewport.pageTop - visualViewport.offsetTop);
   viewportFixed();
 }
 // viewport scroll 스크롤 끝난 후 진행
@@ -241,18 +239,20 @@ function handleViewportScroll (e){
   testTag.viewportScrollText.textContent = viewportScrollY;
   viewportFixed();
 }
+
 function viewportFixed(){
   testTag.offsetTopText.textContent = parseInt(visualViewport.offsetTop);
   testTag.pageTopText.textContent = parseInt(visualViewport.pageTop);
-  testTag.resultText.textContent = Math.abs(figure.result)
-  if(window.scrollY > 0){ // 1 보다 작을 때 0, -1 ~
+  testTag.gapTopText.textContent = Math.abs(figure.gapTop);
+  
+  if(window.scrollY < 0){ // 1 보다 작을 때 0, -1 ~
     figure.translateY = 0;
   }
   // 가상 영역까지 스크롤 내려가는 것을 방지
   if(window.scrollY + figure.viewportHeight > figure.bodyHeight - 2){ 
     window.scrollTo(0, figure.bodyHeight - figure.viewportHeight-1);
   }
-  figure.translateY = window.scrollY - figure.result;
+  figure.translateY = parseInt(window.scrollY - figure.gapTop);
   testTag.windowScrollText.textContent = parseInt(window.scrollY); // 스크롤
   testTag.endTranslateText.textContent = figure.translateY; 
   viewportwrap.style.transform = `translateY(${figure.translateY}px)`;
@@ -271,21 +271,23 @@ function viewportResize () {
   testTag.viewportHeightText.textContent = figure.viewportHeight;
   testTag.differenceHeightText.textContent = figure.differenceHeightNum;
  
-  // IOS 키패드 전체 화면 높이보다 viewport 높이가 작을 때
+  // 키패드 전체 화면 높이보다 viewport 높이가 작을 때
   if(figure.windowInnerHeight > figure.viewportHeight){ // 키보드 ON
     figure.isKeyboard = true;
     testTag.keyboardOnOffText.textContent = 'On';
     viewportwrap.style.height = `${figure.viewportHeight}px`;
+    window.addEventListener('scroll',handleWindowScroll);
+    visualViewport.addEventListener("scroll", handleViewportScroll);
   }else{  // 키보드 OFF
     figure.isKeyboard = false;
     testTag.keyboardOnOffText.textContent = 'Off';
     viewportwrap.style.height = "100%";
+    window.removeEventListener('scroll',handleWindowScroll);
+    visualViewport.removeEventListener("scroll", handleViewportScroll);
   }
 }
 visualViewport.addEventListener('resize',viewportResize);
 
-window.addEventListener('scroll',handleWindowScroll);
-visualViewport.addEventListener("scroll", handleViewportScroll);
 
 
 </script>
