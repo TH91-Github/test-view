@@ -111,7 +111,7 @@ body{
   height:100%;
   background:rgb(67, 104, 80,.7);
   font-size:0.875rem;
-  /* transition: all .1s; */
+  transition: all .1s;
 }
 .visual-viewport .title {
   position:absolute;
@@ -146,7 +146,7 @@ body{
 <body>
   <div class="wrap">
     <div class="content">
-      <h1 class="title">IOS 키보드 테스트</h1>
+      <h1 class="title">키보드 테스트</h1>
       <div class="input-box">
         <input type="text" class="input"/><br />
         <span>☝️ TEST Input</span>
@@ -231,32 +231,29 @@ const viewportwrap = document.querySelector('.visual-viewport');
 
 function handleWindowScroll(e){
   figure.gapTop = parseInt(visualViewport.pageTop - visualViewport.offsetTop);
-  viewportFixed();
+  testTag.offsetTopText.textContent = parseInt(visualViewport.offsetTop);
+  testTag.pageTopText.textContent = parseInt(visualViewport.pageTop);
+  testTag.gapTopText.textContent = Math.abs(figure.gapTop);
+
+  // // 가상 영역까지 스크롤 내려가는 것을 방지
+  if(window.scrollY + figure.viewportHeight > figure.bodyHeight - 2){ 
+    window.scrollTo(0, figure.bodyHeight - figure.viewportHeight-1);
+  }
+  if(window.scrollY < 0){ // 1 보다 작을 때 0, -1 ~
+    figure.translateY = 0;
+  }
+  // figure.translateY = parseInt(window.scrollY - figure.gapTop);
+  testTag.windowScrollText.textContent = parseInt(window.scrollY); // 스크롤
+  // testTag.endTranslateText.textContent = figure.translateY;
+  // viewportwrap.style.transform = `translateY(${figure.translateY}px)`;
+
 }
 // viewport scroll 스크롤 끝난 후 진행
 function handleViewportScroll (e){ 
   const viewportScrollY = parseInt(e.target.offsetTop);
   testTag.viewportScrollText.textContent = viewportScrollY;
-  viewportFixed();
-}
-
-function viewportFixed(){
-  testTag.offsetTopText.textContent = parseInt(visualViewport.offsetTop);
-  testTag.pageTopText.textContent = parseInt(visualViewport.pageTop);
-  testTag.gapTopText.textContent = Math.abs(figure.gapTop);
-  
-  if(window.scrollY < 0){ // 1 보다 작을 때 0, -1 ~
-    figure.translateY = 0;
-  }
-  // 가상 영역까지 스크롤 내려가는 것을 방지
-  if(window.scrollY + figure.viewportHeight > figure.bodyHeight - 2){ 
-    window.scrollTo(0, figure.bodyHeight - figure.viewportHeight-1);
-  }
-  
-  figure.translateY = parseInt(window.scrollY - figure.gapTop);
-  testTag.windowScrollText.textContent = parseInt(window.scrollY); // 스크롤
-  testTag.endTranslateText.textContent = figure.translateY; 
-  viewportwrap.style.transform = `translateY(${figure.translateY}px)`;
+  testTag.endTranslateText.textContent = viewportScrollY;
+  viewportwrap.style.transform = `translateY(${viewportScrollY}px)`;
 }
 
 // Resize
@@ -288,7 +285,6 @@ function viewportResize () {
   }
 }
 visualViewport.addEventListener('resize',viewportResize);
-
 
 
 </script>
